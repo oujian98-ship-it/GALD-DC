@@ -1,11 +1,11 @@
-*.png
-*.jpg
-data/
+#*.png
+#*.jpg
+#data/
 logs/
 __pycache__/
 *.pth
 *.pt
-*.checkpoint
+#*.checkpoint
 DATASET/
 *.pdf
 drawer/
