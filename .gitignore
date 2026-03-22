@@ -1,0 +1,12 @@
+*.png
+*.jpg
+data/
+logs/
+__pycache__/
+*.pth
+*.pt
+*.checkpoint
+DATASET/
+*.pdf
+drawer/
+.ruff_cache/
