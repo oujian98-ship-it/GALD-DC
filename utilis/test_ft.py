@@ -20,9 +20,7 @@ def test_ft(datapath, args, modelpath=None, crt_modelpath=None, test_cfg=None):
         try:
             raw_data = torch.load(modelpath)
             model_config = dict(raw_data)
-            
-            # [关键隔离] 如果 checkpoint 内部包含了 'config' 键 (这是 GALD-DC 保存格式特有的)
-            # 我们将其重命名，避免与后续处理逻辑中的 config 变量产生命名空间污染
+
             if 'config' in model_config:
                 print(">>> [test_ft] Isolated internal 'config' key to 'checkpoint_config'")
                 model_config['checkpoint_config'] = model_config.pop('config')
@@ -47,18 +45,13 @@ def test_ft(datapath, args, modelpath=None, crt_modelpath=None, test_cfg=None):
     # Generate print version of config (without ['state_dict'], ['train_info']['class_num_list'])
     cfg_print = copy.deepcopy({k: model_config[k] for k in set(list(model_config.keys())) - set(['state_dict'])})
     
-    # [修复] 增加对不同版本 Checkpoint 结构的兼容性
-    # 如果 dataset 是字符串，则说明是旧格式，需要转换为字典
     if isinstance(model_config.get('dataset'), str):
         print(f">>> [test_ft] Converting dataset string '{model_config['dataset']}' to dict")
         model_config['dataset'] = {'name': model_config['dataset']}
     
-    # 确保 train_info 字典存在
     if 'train_info' not in model_config:
         model_config['train_info'] = {}
 
-    # [修复] 补全缺失的 'model' 配置字典
-    # model_init.py 要求 cfg 必须是字典，且包含 'name', 'fc_norm', 'ensemble_info' 等键
     if 'model' not in model_config or isinstance(model_config['model'], str):
         model_name = model_config.get('model', 'resnet32') if isinstance(model_config.get('model'), str) else 'resnet32'
         print(f">>> [test_ft] Constructing full model config dictionary for '{model_name}'")
@@ -80,7 +73,6 @@ def test_ft(datapath, args, modelpath=None, crt_modelpath=None, test_cfg=None):
         cfg_print.get('train_info', {}).pop('class_num_list', None)
 
     # ----------------Loading the dataset, create dataloader----------------#
-    # 确保 dataset 字典结构完整
     if 'name' not in model_config['dataset']:
         model_config['dataset']['name'] = args.dataset
         
@@ -98,7 +90,7 @@ def test_ft(datapath, args, modelpath=None, crt_modelpath=None, test_cfg=None):
                                    update=False)
         train_set, val_set, test_set, dset_info = data_loader_wrapper(cfg.dataset)
     
-    # 确保训练信息中有类别列表
+
     if 'train_info' not in model_config: model_config['train_info'] = {}
     model_config['train_info']['class_num_list'] = dset_info['per_class_img_num']
 

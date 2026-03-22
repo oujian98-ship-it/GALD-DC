@@ -10,7 +10,6 @@ from model.model_init import model_init
 
 
 def tester_ft(dataset, trainset, valset, model_config, args):
-    # [Debug] 核心入口检查
     if not isinstance(model_config, dict):
         raise TypeError(f">>> [tester_ft] model_config MUST be a dict, but got {type(model_config)}. Value: {str(model_config)[:100]}")
 
@@ -43,13 +42,11 @@ def tester_ft(dataset, trainset, valset, model_config, args):
     elif 'backbone' in state_dict:
         model_state_dict = state_dict['backbone']
     else:
-        # [修复] 如果 state_dict 已经直接包含了权重 (没有包装键)，则直接使用它
-        # 这是一个常见的轻量级保存格式
+
         if any(not k.startswith('model.') and not k.startswith('backbone.') for k in state_dict.keys()):
             print(">>> [tester_ft] Using state_dict directly as model weights")
             model_state_dict = state_dict
         else:
-            # 最后的退路：尝试从 checkpoint 路径加载 (通常不推荐，但在老代码中存在)
             ckpt_path = model_config.get('checkpoint', {}).get('save_path')
             if ckpt_path and os.path.exists(ckpt_path):
                 model_state_dict = torch.load(ckpt_path)['state_dict']['model']

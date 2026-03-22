@@ -6,9 +6,7 @@ from .training_monitor import TrainingMonitor
 
 
 def train_gald_dc(args):
-    """
-    GALD-DC (Geometry-Aware Latent Diffusion with Distribution Calibration) entry point.
-    """
+   
     print(f"[GALD-DC] Starting training: {args.dataset}, imb_factor: {args.imb_factor}")
     print(
         f"[GALD-DC] lr: {args.lr}, lambda_sem: {args.lambda_sem}, gamma_ge: {args.gamma_ge}"

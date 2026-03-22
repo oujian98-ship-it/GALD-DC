@@ -1,29 +1,9 @@
-"""
-LoRA (Low-Rank Adaptation) Adapter Module
-
-R6 Fix: Allows the diffusion model to lightly track the Encoder feature space drift
-
-Reference: LoRA: Low-Rank Adaptation of Large Language Models (Hu et al., 2021)
-
-Core Idea:
-- Freeze original diffusion model weights
-- Inject low-rank matrices A, B into target layers
-- Only train A, B (~0.1% parameters)
-- Output: W*x + (B @ A)*x * (alpha/rank)
-"""
-
 import torch
 import torch.nn as nn
 from typing import Dict, List, Optional
 
 
 class LoRALinear(nn.Module):
-    """
-    LoRA linear layer wrapper
-
-    Enhances original Linear layer to: y = W*x + (B @ A)*x * (alpha/rank)
-    Where W is frozen, A and B are trainable
-    """
 
     def __init__(
         self,
@@ -68,7 +48,6 @@ class LoRALinear(nn.Module):
         # Original layer output (frozen weights)
         original_output = self.original_layer(x)
 
-        # LoRA increment: (B @ A) @ x.T -> x @ A.T @ B.T
         lora_output = self.dropout(x) @ self.lora_A.T @ self.lora_B.T
 
         return original_output + lora_output * self.scaling

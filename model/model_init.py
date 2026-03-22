@@ -6,7 +6,6 @@ from model.losses import *
 import logging
 import importlib
 
-#fixme
 model_paths = {
     'stage2':        'networks.stage_2',
     'none_cifar':    'networks.resnet_cifar',
@@ -41,7 +40,6 @@ def model_init(cfg, dataset, state_dict=None):
                        cfg['ensemble_info']['ensemble_num'],
                        cfg['fc_norm'])
 
-    # Learnable Weight Scaling (LWS)
 
     # --------------------------Regular ResNet models---------------------------#
     elif cfg['ensemble_info']['name'] == 'none':

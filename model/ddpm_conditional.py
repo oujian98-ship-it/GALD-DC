@@ -377,7 +377,6 @@ class UNet_conditional(nn.Module):
         x = self.init_conv(x)
         r = x.clone()
 
-        # 边界检查：确保标签值在有效范围内
         y_label_clamped = torch.clamp(y_label.long(), 0, self.label_emb.num_embeddings - 1)
         t = self.time_mlp(time) + self.label_emb(y_label_clamped)
 
@@ -483,7 +482,7 @@ class ConditionalDiffusion1D(nn.Module):
         self.num_timesteps = int(timesteps)
 
         # sampling related parameters
-        self.sampling_timesteps = default(sampling_timesteps, timesteps) # default num sampling timesteps to number of timesteps at training
+        self.sampling_timesteps = default(sampling_timesteps, timesteps)
 
         assert self.sampling_timesteps <= timesteps
         self.is_ddim_sampling = self.sampling_timesteps < timesteps
@@ -696,10 +695,6 @@ class ConditionalDiffusion1D(nn.Module):
 
         # noise sample
         x = self.q_sample(x_start = x_start, t = t, noise = noise)
-
-        # if doing self-conditioning, 50% of the time, predict x_start from current set of times
-        # and condition with unet with that
-        # this technique will slow down training by 25%, but seems to lower FID significantly
 
         x_self_cond = None
         if self.self_condition and random() < 0.5:

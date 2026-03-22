@@ -47,7 +47,7 @@ def mmf_acc_cal(logits, label: List[int], class_num_list: List[int], method: str
     
     num_classes = len(class_num_list)
     
-    # 根据类别数判断数据集类型
+    
     if num_classes == 10:  # CIFAR-10
         sorted_indices = np.argsort(class_num_list)[::-1]
         mmf_id = [0] * num_classes
@@ -60,8 +60,7 @@ def mmf_acc_cal(logits, label: List[int], class_num_list: List[int], method: str
             else:
                 mmf_id[cls_idx] = 2  # Few
                 
-    else:  # CIFAR-100 / ImageNet
-        # Many: 样本数 > 100, Medium: 20 ≤ 样本数 ≤ 100, Few: 样本数 < 20
+    else:  
         mmf_id = []
         for num in class_num_list:
             if num < 20:
@@ -80,7 +79,6 @@ def mmf_acc_cal(logits, label: List[int], class_num_list: List[int], method: str
             is_correct = (i == j)
             correct[mmf_id[j]] += is_correct
             total[mmf_id[j]] += 1
-            # 累计总体准确率
             total_correct += is_correct
             total_samples += 1
 
