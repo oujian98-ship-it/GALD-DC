@@ -11,10 +11,13 @@ If you find our paper/code is useful, please cite:
 
 ## Framework
 <p align="center">
-  <img width="750" src="./assets/framework.png"> 
+  <img width="750" src="./assets/GALD_DC_framework.png"> 
 </p>
 
-Overview of GALD-DC Stage 1: Train the encoder $\mathcal{E}$ and classifier $\mathcal{G}$ on long-tailed data, build the latent feature set $\mathcal{D}_z$, and extract head-class geometry statistics, including the global radius reference $r_{\mathrm{prior}}$. Stage 2: Train a class-conditional latent feature diffusion model and apply geometry-aware losses on the denoised estimate $\tilde{z}_0$ (prototype anchoring $\mathcal{L}_{\mathrm{pro}}$, radius constraint $\mathcal{L}_{\mathrm{rad}}$, and boundary constraint $\mathcal{L}_{\mathrm{mar}}$) to obtain the calibrated radius $r_y^{\mathrm{cal}}$. Stage 3: Fine-tune with a real-image stream and an on-the-fly pseudo-feature stream; LoRA adapts the diffusion model, geometric projection enforces $r_y^{\mathrm{cal}}$, and gradients are separated so that $\mathcal{E}$ is updated only from real/consistency losses while LoRA is updated only from pseudo-feature supervision.
+**Overview of GALD-DC:**
+* **Stage 1**: Train the encoder $\mathcal{E}$ and classifier $\mathcal{G}$ on long-tailed data, build the latent feature set $\mathcal{D}_z$, and extract head-class geometry statistics, including the global radius reference $r_{\text{prior}}$.
+* **Stage 2**: Train a class-conditional latent feature diffusion model and apply geometry-aware losses on the denoised estimate $\tilde{z}_0$ (prototype anchoring $\mathcal{L}_{\text{pro}}$, radius constraint $\mathcal{L}_{\text{rad}}$, and boundary constraint $\mathcal{L}_{\text{mar}}$) to obtain the calibrated radius $r_y^{\text{cal}}$.
+* **Stage 3**: Fine-tune with a real-image stream and an on-the-fly pseudo-feature stream; LoRA adapts the diffusion model, geometric projection enforces $r_y^{\text{cal}}$, and gradients are separated so that $\mathcal{E}$ is updated only from real/consistency losses while LoRA is updated only from pseudo-feature supervision.
 
 
 ## Installation
