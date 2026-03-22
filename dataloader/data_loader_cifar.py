@@ -82,21 +82,8 @@ def data_loader(dataset, datapath, data_transforms, imb_factor=None):
     return train_dataset, val_dataset, test_dataset, dset_info
 
 
-# ======================== Imbalanced Cifar Data ===============================
 def get_img_num_per_cls(dataset, imb_factor=None):
-    """
-    Get a list of image numbers for each class, given cifar version
-    Num of imgs follows emponential distribution
-    img max: 5000 / 500 * e^(-lambda * 0);
-    img min: 5000 / 500 * e^(-lambda * int(cifar_version - 1))
-    exp(-lambda * (int(cifar_version) - 1)) = img_max / img_min
-    args:
-      cifar_version: str, '10', '100', '20'
-      imb_factor: float, imbalance factor: img_min/img_max,
-        None if geting default cifar data number
-    output:
-      img_num_per_cls: a list of number of images per class
-    """
+
     if dataset == 'CIFAR10':
         cls_num = 10
     elif dataset == 'CIFAR100':
@@ -113,5 +100,3 @@ def get_img_num_per_cls(dataset, imb_factor=None):
         img_num_per_cls.append(int(num))
     return img_num_per_cls
 
-# if __name__ == '__main__':
-#     print(get_img_num_per_cls(dataset = "CIFAR10", imb_factor = 0.1))
