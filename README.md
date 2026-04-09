@@ -65,12 +65,3 @@ data
             ariplane1.png
             ...
 ```
-
-
-
-
-## Results
-
-**CIFAR-LT Results**
-
-**ImageNet-LT Results**
